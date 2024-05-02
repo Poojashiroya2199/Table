@@ -5,12 +5,17 @@ import { AddCircle } from "@emotion-icons/fluentui-system-regular";
 //css
 import * as Styles from "./index.styles";
 
-const Filters = ({ handleModal, handleDelete }) => {
+const Filters = ({ handleModal, handleDelete, search, handleSearch }) => {
   return (
     <Styles.FiltersContainer>
       <Styles.SearchContainer>
         <Styles.SearchIcon fill="#979797" />
-        <Styles.SearchInput type="text" placeholder="Search..." />
+        <Styles.SearchInput
+          type="text"
+          placeholder="Search..."
+          value={search}
+          onChange={(e) => handleSearch(e.target.value)}
+        />
       </Styles.SearchContainer>
       <Styles.ButtonsContainer>
         <Styles.IconButton onClick={handleDelete}>

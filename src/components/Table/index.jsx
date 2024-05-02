@@ -35,6 +35,27 @@ const StyledTable = () => {
   const [tableData, setTableData] = useState(data);
   const [rowSelection, setRowSelection] = useState({});
 
+  //search filter
+  const [searchInput, setSearchInput] = useState("");
+  const handleSearch = (value) => {
+    console.log(value);
+    setSearchInput(value);
+    if (!value || value.length === 0) {
+      setTableData(data);
+    }
+    if (value && value.length > 0) {
+      const filteredData = tableData.filter(
+        (item) =>
+          item.name.toLowerCase().includes(value.toLowerCase()) ||
+          item.type.toLowerCase().includes(value.toLowerCase()) ||
+          item.size.toString().toLowerCase().includes(value.toLowerCase()) ||
+          item.price.toString().toLowerCase().includes(value.toLowerCase()),
+      );
+      console.log(filteredData);
+      setTableData(filteredData);
+    }
+  };
+
   // add modal details
   const [addModal, setAddModal] = useState(false);
   const [addData, setAddData] = useState({
@@ -191,7 +212,12 @@ const StyledTable = () => {
 
   return (
     <TableContainer>
-      <Filters handleModal={handleModal} handleDelete={handleDelete} />
+      <Filters
+        search={searchInput}
+        handleSearch={handleSearch}
+        handleModal={handleModal}
+        handleDelete={handleDelete}
+      />
       <StyledMaterialTable table={table} />
       {/* add modal */}
       <Modal open={addModal} handleClose={() => setAddModal(false)}>
