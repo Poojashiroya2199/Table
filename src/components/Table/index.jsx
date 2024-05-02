@@ -51,7 +51,6 @@ const StyledTable = () => {
           item.size.toString().toLowerCase().includes(value.toLowerCase()) ||
           item.price.toString().toLowerCase().includes(value.toLowerCase()),
       );
-      console.log(filteredData);
       setTableData(filteredData);
     }
   };
