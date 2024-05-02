@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import {
   FormContainer,
   ButtonsContainer,
@@ -35,7 +36,7 @@ const EditData = ({ editData, handleClose, handleEditChange, handleEdit }) => {
           type="text"
           id="size"
           placeholder="Enter Size"
-          value={EditDataData.size}
+          value={editData.size}
           onChange={(e) => handleEditChange("size", e.target.value)}
         />
       </InputContainer>

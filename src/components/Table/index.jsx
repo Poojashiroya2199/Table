@@ -35,6 +35,26 @@ const StyledTable = () => {
   const [tableData, setTableData] = useState(data);
   const [rowSelection, setRowSelection] = useState({});
 
+  //search filter
+  const [searchInput, setSearchInput] = useState("");
+  const handleSearch = (value) => {
+    console.log(value);
+    setSearchInput(value);
+    if (!value || value.length === 0) {
+      setTableData(data);
+    }
+    if (value && value.length > 0) {
+      const filteredData = tableData.filter(
+        (item) =>
+          item.name.toLowerCase().includes(value.toLowerCase()) ||
+          item.type.toLowerCase().includes(value.toLowerCase()) ||
+          item.size.toString().toLowerCase().includes(value.toLowerCase()) ||
+          item.price.toString().toLowerCase().includes(value.toLowerCase()),
+      );
+      setTableData(filteredData);
+    }
+  };
+
   // add modal details
   const [addModal, setAddModal] = useState(false);
   const [addData, setAddData] = useState({
@@ -97,9 +117,26 @@ const StyledTable = () => {
       editData?.price
     ) {
       const selectedIndex = Object.keys(rowSelection);
-      console.log(selectedIndex, "check");
-      // const filteredData = tableData.filter(())
+      const selected = Number(selectedIndex[0]);
+      const newData = tableData.map((item, index) => {
+        if (Number(index) === Number(selected)) {
+          return {
+            name: editData.name,
+            type: editData.type,
+            size: editData.size,
+            price: editData.price,
+          };
+        } else return item;
+      });
+      setTableData(newData);
     }
+    setEditModal(false);
+    setEditData({
+      name: "",
+      type: "",
+      size: "",
+      price: "",
+    });
   };
   // handle edit modal input onRowSelectionChange
   const handleEditChange = (property, value) => {
@@ -114,28 +151,30 @@ const StyledTable = () => {
       {
         accessorKey: "name", //simple recommended way to define a column
         header: "Name",
-        size: 70,
+        size: 100,
         muiTableHeadCellProps: { sx: { color: "#113f67" } }, //optional custom props
         Cell: ({ cell }) => <span>{camelCase(cell.getValue())}</span>, //optional custom cell render
       },
       {
         accessorKey: "type",
         header: "Type",
-        size: 100,
+        size: 80,
         muiTableHeadCellProps: { sx: { color: "#113f67" } },
         Cell: ({ cell }) => <span>{camelCase(cell.getValue())}</span>,
       },
       {
         accessorKey: "size",
         header: "Size",
-        size: 100,
-        muiTableHeadCellProps: { sx: { color: "#113f67" } },
+        size: 80,
+        muiTableHeadCellProps: {
+          sx: { color: "#113f67" },
+        },
         Cell: ({ cell }) => <span>{cell.getValue()}</span>,
       },
       {
         accessorKey: "price",
         header: "Price",
-        size: 100,
+        size: 80,
         muiTableHeadCellProps: { sx: { color: "#113f67" } },
         Cell: ({ cell }) => <span>{cell.getValue()}</span>,
         Header: () => <span>Rate &#8377;</span>,
@@ -172,7 +211,12 @@ const StyledTable = () => {
 
   return (
     <TableContainer>
-      <Filters handleModal={handleModal} handleDelete={handleDelete} />
+      <Filters
+        search={searchInput}
+        handleSearch={handleSearch}
+        handleModal={handleModal}
+        handleDelete={handleDelete}
+      />
       <StyledMaterialTable table={table} />
       {/* add modal */}
       <Modal open={addModal} handleClose={() => setAddModal(false)}>
