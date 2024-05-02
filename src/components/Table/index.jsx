@@ -97,7 +97,7 @@ const StyledTable = () => {
       editData?.price
     ) {
       const selectedIndex = Object.keys(rowSelection);
-      console.log(selectedIndex);
+      console.log(selectedIndex, "check");
       // const filteredData = tableData.filter(())
     }
   };
