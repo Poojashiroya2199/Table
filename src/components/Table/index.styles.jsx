@@ -1,14 +1,18 @@
 import { Search } from "@emotion-icons/boxicons-regular";
 import styled from "@emotion/styled";
 import { MaterialReactTable } from "material-react-table";
+import {TextField} from "@mui/material";
 
 export const TableContainer = styled.section`
   max-width: 100%;
   width: 100%;
-  overflow-x: auto;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  background: #f9f9f9;
+  padding: 16px;
+  border-radius: 8px;
+  box-sizing:border-box;
 `;
 
 export const FiltersContainer = styled.div`

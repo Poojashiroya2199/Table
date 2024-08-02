@@ -1,6 +1,10 @@
 import { useMemo, useEffect, useState } from "react";
 import { useMaterialReactTable } from "material-react-table";
-import { Modal } from "@mui/material";
+import { Modal, Button, TextField } from "@mui/material";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SearchIcon from "@mui/icons-material/Search";
 
 import AddData from "../AddData/index";
 import EditData from "../EditData";
@@ -8,7 +12,7 @@ import { data } from "../../mock/table";
 import Filters from "./Filters";
 
 //css
-import { TableContainer, StyledMaterialTable } from "./index.styles";
+import { TableContainer, StyledMaterialTable, FiltersContainer, SearchContainer, ButtonsContainer, IconButton, SearchInput } from "./index.styles";
 
 //camelcase
 export const camelCase = (input) => {
@@ -16,15 +20,12 @@ export const camelCase = (input) => {
     return "";
   }
 
-  // Split the input string by underscore or space
   const words = input.split(/[_\s]+/);
 
-  // Map each word to title case (first letter uppercase, rest lowercase)
   const formattedWords = words.map((word) => {
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
   });
 
-  // Join the formatted words with underscores or spaces based on original input
   const formattedOutput = input.includes("_")
     ? formattedWords.join("_")
     : formattedWords.join(" ");
@@ -34,22 +35,22 @@ export const camelCase = (input) => {
 const StyledTable = () => {
   const [tableData, setTableData] = useState(data);
   const [rowSelection, setRowSelection] = useState({});
+  const [loading, setLoading] = useState(false);
 
   //search filter
   const [searchInput, setSearchInput] = useState("");
   const handleSearch = (value) => {
-    console.log(value);
     setSearchInput(value);
     if (!value || value.length === 0) {
       setTableData(data);
     }
     if (value && value.length > 0) {
-      const filteredData = tableData.filter(
+      const filteredData = data.filter(
         (item) =>
           item.name.toLowerCase().includes(value.toLowerCase()) ||
           item.type.toLowerCase().includes(value.toLowerCase()) ||
           item.size.toString().toLowerCase().includes(value.toLowerCase()) ||
-          item.price.toString().toLowerCase().includes(value.toLowerCase()),
+          item.price.toString().toLowerCase().includes(value.toLowerCase())
       );
       setTableData(filteredData);
     }
@@ -73,28 +74,25 @@ const StyledTable = () => {
       addData?.price
     ) {
       setTableData([addData, ...tableData]);
+      setAddData({
+        name: "",
+        type: "",
+        size: "",
+        price: "",
+      });
+      setAddModal(false);
     }
-    setAddData({
-      name: "Enter Full Name",
-      type: "Enter Type",
-      size: "Enter Size",
-      price: "Enter Price",
-    });
-    setAddModal(false);
   };
   // handle add modal input onRowSelectionChange
   const handleAddChange = (property, value) => {
-    if (property === "name") setAddData({ ...addData, name: value });
-    if (property === "type") setAddData({ ...addData, type: value });
-    if (property === "size") setAddData({ ...addData, size: value });
-    if (property === "price") setAddData({ ...addData, price: value });
+    setAddData({ ...addData, [property]: value });
   };
 
   //handle delete items
   const handleDelete = () => {
     const checkVal = Object.keys(rowSelection);
     const filteredData = tableData.filter(
-      (_item, index) => !checkVal.includes(index.toString()),
+      (_item, index) => !checkVal.includes(index.toString())
     );
     setTableData(filteredData);
   };
@@ -107,7 +105,7 @@ const StyledTable = () => {
     size: "",
     price: "",
   });
-  //  handle edit data
+  // handle edit data
   const handleEdit = () => {
     if (
       editData &&
@@ -140,20 +138,17 @@ const StyledTable = () => {
   };
   // handle edit modal input onRowSelectionChange
   const handleEditChange = (property, value) => {
-    if (property === "name") setEditData({ ...editData, name: value });
-    if (property === "type") setEditData({ ...editData, type: value });
-    if (property === "size") setEditData({ ...editData, size: value });
-    if (property === "price") setEditData({ ...editData, price: value });
+    setEditData({ ...editData, [property]: value });
   };
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: "name", //simple recommended way to define a column
+        accessorKey: "name",
         header: "Name",
         size: 100,
-        muiTableHeadCellProps: { sx: { color: "#113f67" } }, //optional custom props
-        Cell: ({ cell }) => <span>{camelCase(cell.getValue())}</span>, //optional custom cell render
+        muiTableHeadCellProps: { sx: { color: "#113f67" } },
+        Cell: ({ cell }) => <span>{camelCase(cell.getValue())}</span>,
       },
       {
         accessorKey: "type",
@@ -166,9 +161,7 @@ const StyledTable = () => {
         accessorKey: "size",
         header: "Size",
         size: 80,
-        muiTableHeadCellProps: {
-          sx: { color: "#113f67" },
-        },
+        muiTableHeadCellProps: { sx: { color: "#113f67" } },
         Cell: ({ cell }) => <span>{cell.getValue()}</span>,
       },
       {
@@ -180,7 +173,7 @@ const StyledTable = () => {
         Header: () => <span>Rate &#8377;</span>,
       },
     ],
-    [],
+    []
   );
 
   const table = useMaterialReactTable({
@@ -190,7 +183,7 @@ const StyledTable = () => {
     enableDensityToggle: false,
     enableFullScreenToggle: false,
     enableHiding: false,
-    enableRowSelection: true, //give each row a more useful id
+    enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     enablePagination: true,
     enableRowNumbers: true,
@@ -211,15 +204,9 @@ const StyledTable = () => {
 
   return (
     <TableContainer>
-      <Filters
-        search={searchInput}
-        handleSearch={handleSearch}
-        handleModal={handleModal}
-        handleDelete={handleDelete}
-      />
+     <Filters handleModal={handleModal} rowSelection={rowSelection} handleDelete={handleDelete} search={searchInput} handleSearch={handleSearch}/>
       <StyledMaterialTable table={table} />
-      {/* add modal */}
-      <Modal open={addModal} handleClose={() => setAddModal(false)}>
+      <Modal open={addModal} onClose={() => setAddModal(false)}>
         <AddData
           handleClose={() => setAddModal(false)}
           handleAdd={handleAdd}
@@ -227,8 +214,7 @@ const StyledTable = () => {
           handleAddChange={handleAddChange}
         />
       </Modal>
-      {/* edit modal */}
-      <Modal open={editModal} handleClose={() => setEditModal(false)}>
+      <Modal open={editModal} onClose={() => setEditModal(false)}>
         <EditData
           handleClose={() => setEditModal(false)}
           handleEdit={handleEdit}

@@ -15,6 +15,7 @@ const EditData = ({ editData, handleClose, handleEditChange, handleEdit }) => {
         <Input
           type="text"
           id="name"
+          autoComplete
           placeholder="Enter Full Name"
           value={editData.name}
           onChange={(e) => handleEditChange("name", e.target.value)}
@@ -25,6 +26,7 @@ const EditData = ({ editData, handleClose, handleEditChange, handleEdit }) => {
         <Input
           type="text"
           id="type"
+          autoComplete
           placeholder="Enter Type"
           value={editData.type}
           onChange={(e) => handleEditChange("type", e.target.value)}
@@ -35,6 +37,7 @@ const EditData = ({ editData, handleClose, handleEditChange, handleEdit }) => {
         <Input
           type="text"
           id="size"
+          autoComplete
           placeholder="Enter Size"
           value={editData.size}
           onChange={(e) => handleEditChange("size", e.target.value)}
@@ -45,6 +48,7 @@ const EditData = ({ editData, handleClose, handleEditChange, handleEdit }) => {
         <Input
           type="text"
           id="price"
+          autoComplete
           placeholder="Enter Price"
           value={editData.price}
           onChange={(e) => handleEditChange("price", e.target.value)}
