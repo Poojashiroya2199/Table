@@ -18,6 +18,7 @@ const AddData = ({ handleClose, handleAdd, handleAddChange, addData }) => {
           id="name"
           placeholder="Enter Full Name"
           value={addData.name}
+          autoComplete
           onChange={(e) => handleAddChange("name", e.target.value)}
         />
       </InputContainer>
@@ -26,6 +27,7 @@ const AddData = ({ handleClose, handleAdd, handleAddChange, addData }) => {
         <Input
           type="text"
           id="type"
+          autoComplete
           placeholder="Enter Type"
           value={addData.type}
           onChange={(e) => handleAddChange("type", e.target.value)}
@@ -36,6 +38,7 @@ const AddData = ({ handleClose, handleAdd, handleAddChange, addData }) => {
         <Input
           type="text"
           id="size"
+          autoComplete
           placeholder="Enter Size"
           value={addData.size}
           onChange={(e) => handleAddChange("size", e.target.value)}
@@ -46,6 +49,7 @@ const AddData = ({ handleClose, handleAdd, handleAddChange, addData }) => {
         <Input
           type="text"
           id="price"
+          autoComplete
           placeholder="Enter Price"
           value={addData.price}
           onChange={(e) => handleAddChange("price", e.target.value)}
